@@ -14,18 +14,19 @@ fun FavoritesScreen(
     favorites: List<String>,
     onGroupClick: (String) -> Unit
 ) {
-
     if (favorites.isEmpty()) {
-        Text(
-            "Нет избранных групп",
-            modifier = Modifier.padding(16.dp)
-        )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ) {
+            Text("Нет избранных групп")
+        }
     } else {
         LazyColumn {
             items(favorites) { group ->
                 Card(
                     modifier = Modifier
-                        .padding(8.dp)
+                        .padding(12.dp)
                         .fillMaxWidth()
                         .clickable { onGroupClick(group) }
                 ) {
