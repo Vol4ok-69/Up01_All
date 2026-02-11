@@ -3,3 +3,5 @@ backend/CollegeSchedule/bin/
 backend/CollegeSchedule/appsettings.json
 backend/CollegeSchedule/appsettings.Development.json
 
+
+.fake

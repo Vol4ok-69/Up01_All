@@ -41,3 +41,28 @@ INSERT INTO teacher (last_name, first_name, middle_name, position) VALUES
 INSERT INTO student_group (group_name, course, specialty_id) VALUES
 ('ИС-12', 1, 1),
 ('ИС-22', 2, 1);
+
+INSERT INTO schedule 
+(lesson_date, weekday_id, lesson_time_id, group_id, subject_id, teacher_id, classroom_id, group_part)
+VALUES
+('2026-01-12', 1, 1, 1, 1, 1, 1, 'FULL'),
+('2026-01-12', 1, 2, 1, 2, 2, 2, 'FULL'),
+('2026-01-13', 2, 1, 1, 3, 1, 3, 'FULL'),
+('2026-01-13', 2, 2, 1, 4, 2, 4, 'FULL'),
+('2026-01-14', 3, 1, 1, 2, 2, 1, 'FULL'),
+('2026-01-14', 3, 2, 1, 1, 1, 2, 'FULL'),
+('2026-01-15', 4, 1, 1, 4, 2, 3, 'FULL'),
+('2026-01-16', 5, 2, 1, 3, 1, 4, 'FULL'),
+('2026-01-17', 6, 1, 1, 1, 1, 1, 'FULL');
+
+
+INSERT INTO schedule 
+(lesson_date, weekday_id, lesson_time_id, group_id, subject_id, teacher_id, classroom_id, group_part)
+VALUES
+('2026-01-12', 1, 1, 2, 2, 2, 2, 'FULL'),
+('2026-01-13', 2, 2, 2, 3, 1, 3, 'FULL'),
+('2026-01-14', 3, 3, 2, 4, 2, 4, 'FULL'),
+('2026-01-15', 4, 1, 2, 1, 1, 1, 'FULL'),
+('2026-01-16', 5, 2, 2, 2, 2, 2, 'FULL'),
+('2026-01-17', 6, 3, 2, 3, 1, 3, 'FULL');
+

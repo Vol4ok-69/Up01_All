@@ -34,9 +34,6 @@ public partial class CollegeScheduleContext : DbContext
 
     public virtual DbSet<weekday> weekdays { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5434;Database=college-schedule-db;Username=admin69;Password=admin69");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasPostgresEnum("lesson_group_part", new[] { "FULL", "SUB1", "SUB2" });
