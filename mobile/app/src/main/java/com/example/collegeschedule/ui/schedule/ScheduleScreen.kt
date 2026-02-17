@@ -1,5 +1,6 @@
 package com.example.collegeschedule.ui.schedule
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ExperimentalMaterialApi
@@ -21,7 +22,10 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.ui.Alignment
 import kotlinx.coroutines.launch
 import com.example.collegeschedule.utils.getForwardWeekRange
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ScheduleScreen(
@@ -33,7 +37,12 @@ fun ScheduleScreen(
 
     var groups by remember { mutableStateOf<List<GroupDto>>(emptyList()) }
     var schedule by remember { mutableStateOf<List<ScheduleByDateDto>>(emptyList()) }
-
+    var cache by remember {
+        mutableStateOf(
+            mutableMapOf<String, List<ScheduleByDateDto>>()
+        )
+    }
+    var weekOffset by remember { mutableStateOf(0) }
     var expanded by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
@@ -65,18 +74,31 @@ fun ScheduleScreen(
 
     // Загрузка расписания при смене группы
     suspend fun fetchSchedule() {
+
+        val (start, end) = getForwardWeekRange(weekOffset)
+        val cacheKey = "${selectedGroup}_${start}_${end}"
+
+        Log.d("CACHE_DEBUG", "Key: $cacheKey")
+
+        if (cache.containsKey(cacheKey)) {
+            Log.d("CACHE_DEBUG", "Loaded from cache")
+            schedule = cache[cacheKey]!!
+            return
+        }
+
         try {
             error = null
 
-            val (start, end) = getForwardWeekRange()
-            Log.d("DATES", "Start: $start End: $end")
-            Log.d("GROUP_DEBUG", "Selected group: '$selectedGroup'")
-
-            schedule = RetrofitInstance.api.getSchedule(
+            val result = RetrofitInstance.api.getSchedule(
                 selectedGroup,
                 start,
                 end
             )
+
+            schedule = result
+            cache[cacheKey] = result
+
+            Log.d("CACHE_DEBUG", "Loaded from API")
 
         } catch (e: IOException) {
             error = "Нет подключения к серверу"
@@ -89,7 +111,7 @@ fun ScheduleScreen(
         }
     }
 
-    LaunchedEffect(selectedGroup) {
+    LaunchedEffect(selectedGroup, weekOffset) {
         loading = true
         fetchSchedule()
         loading = false
@@ -114,7 +136,27 @@ fun ScheduleScreen(
                 title = {
                     Text(selectedGroup)
                 },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { weekOffset-- }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Previous week"
+                        )
+                    }
+                },
                 actions = {
+
+                    IconButton(
+                        onClick = { weekOffset++ }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowForward,
+                            contentDescription = "Next week"
+                        )
+                    }
+
                     IconButton(
                         onClick = { onToggleFavorite(selectedGroup) }
                     ) {
