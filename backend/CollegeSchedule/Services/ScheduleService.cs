@@ -70,6 +70,7 @@ namespace CollegeSchedule.Services
                     }).ToList()
                 })
                 .ToList();
+
             return result;
         }
     }
