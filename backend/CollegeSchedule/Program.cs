@@ -8,8 +8,8 @@
     --use-database-names \
     --force
 */
-
 using CollegeSchedule.Data;
+using CollegeSchedule.Middlewares;
 using CollegeSchedule.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +28,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseRouting();
 app.UseAuthorization();

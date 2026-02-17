@@ -19,12 +19,11 @@ namespace CollegeSchedule.Services
             DateTime startDate,
             DateTime endDate)
         {
+            if (startDate > endDate)
+                throw new ArgumentException("Дата начала больше даты окончания");
+
             var group = await _db.student_groups
-                .FirstOrDefaultAsync(g => g.group_name == groupName);
-
-            if (group == null)
-                throw new Exception("Группа не найдена");
-
+                .FirstOrDefaultAsync(g => g.group_name == groupName) ?? throw new KeyNotFoundException($"Группа {groupName} не найдена");
             var start = DateOnly.FromDateTime(startDate);
             var end = DateOnly.FromDateTime(endDate);
 
@@ -48,7 +47,7 @@ namespace CollegeSchedule.Services
                 {
                     LessonDate = dayGroup.Key.ToDateTime(TimeOnly.MinValue),
                     Weekday = dayGroup.First().weekday.name,
-                    Lessons = dayGroup.Select(s => new LessonDto
+                    Lessons = [.. dayGroup.Select(s => new LessonDto
                     {
                         LessonNumber = s.lesson_time.lesson_number,
                         Time = $"{s.lesson_time.time_start:HH:mm}-{s.lesson_time.time_end:HH:mm}",
@@ -67,7 +66,7 @@ namespace CollegeSchedule.Services
                                 }
                             }
                         }
-                    }).ToList()
+                    })]
                 })
                 .ToList();
 
