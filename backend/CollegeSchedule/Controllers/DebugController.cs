@@ -26,5 +26,15 @@ namespace CollegeSchedule.Controllers
 
             return Ok(dates);
         }
+
+        [HttpGet("ping")]
+        public IActionResult Ping()
+        {
+            return Ok(new
+            {
+                status = "ok",
+                time = DateTime.UtcNow
+            });
+        }
     }
 }
